@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Participante } from '@/types';
 import { formatWhatsApp, cleanPhone, buildWhatsAppLink } from '@/lib/utils';
+import { AdminNavbar } from './AdminNavbar';
 
 export function AdminDashboard() {
   const router = useRouter();
@@ -239,36 +240,7 @@ export function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[#f7f4ec] pb-16">
       {/* Top Navbar */}
-      <nav className="border-b border-slate-200 bg-white/95 sticky top-0 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="badge-tag text-[10px]">ADMIN</span>
-            <div>
-              <h1 className="text-lg font-black text-slate-900 leading-tight">
-                DESPERTA 2026
-              </h1>
-              <p className="text-[10px] text-slate-500 font-medium">Gestão de Participantes</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => carregarParticipantes(true)}
-              title="Atualizar lista"
-              className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-            >
-              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-            </button>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-xs font-bold text-slate-700 transition-colors cursor-pointer"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              <span>Sair</span>
-            </button>
-          </div>
-        </div>
-      </nav>
+      <AdminNavbar />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
@@ -334,13 +306,22 @@ export function AdminDashboard() {
             )}
           </div>
 
-          <button
-            onClick={abrirModalAdicionar}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-[#0047cc] hover:bg-[#003bb5] text-white px-4 py-2.5 text-sm font-bold shadow-sm transition-all cursor-pointer"
-          >
-            <UserPlus className="h-4 w-4" />
-            <span>Adicionar Participante</span>
-          </button>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              onClick={() => carregarParticipantes(true)}
+              title="Atualizar lista"
+              className="p-2.5 text-slate-500 hover:text-slate-800 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors cursor-pointer shrink-0"
+            >
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+            </button>
+            <button
+              onClick={abrirModalAdicionar}
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 rounded-xl bg-[#0047cc] hover:bg-[#003bb5] text-white px-4 py-2.5 text-sm font-bold shadow-sm transition-all cursor-pointer"
+            >
+              <UserPlus className="h-4 w-4" />
+              <span>Adicionar Participante</span>
+            </button>
+          </div>
         </div>
 
         {/* Table / List View */}

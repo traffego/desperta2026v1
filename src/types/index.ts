@@ -15,3 +15,17 @@ export type NovoParticipanteInput = {
   observacoes?: string;
 };
 
+export interface PerguntaAnonima {
+  id: string;
+  sexo: string;
+  idade: number;
+  pergunta: string;
+  status: string; // 'pendente' | 'selecionada' | 'respondida'
+  created_at: string;
+}
+
+export type NovaPerguntaInput = {
+  sexo: string;
+  idade: number;
+  pergunta: string;
+};

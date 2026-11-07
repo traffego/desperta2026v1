@@ -18,6 +18,31 @@ export default function HomePage() {
           <RegistrationForm />
         </div>
 
+        {/* Card de Destaque para Perguntas Anônimas com a Psicóloga */}
+        <div className="max-w-xl mx-auto mt-8 rounded-3xl border-2 border-dashed border-[#0047cc]/40 bg-gradient-to-r from-blue-50/80 via-white to-amber-50/60 p-5 shadow-sm text-center">
+          <div className="flex items-center justify-center gap-2 mb-1.5">
+            <span className="badge-tag bg-[#0047cc] text-white text-[10px]">NOVO</span>
+            <span className="text-xs font-black uppercase tracking-wider text-slate-800">
+              Momento com a Psicóloga
+            </span>
+          </div>
+          <h3 className="text-base font-extrabold text-slate-900">
+            Dúvidas sobre Sexualidade e Afetividade?
+          </h3>
+          <p className="text-xs text-slate-600 mt-1 max-w-md mx-auto">
+            Envie sua pergunta de forma <strong>100% anônima</strong>. A psicóloga responderá dúvidas aleatoriamente durante o evento!
+          </p>
+          <div className="mt-3.5">
+            <Link
+              href="/perguntas-desperta"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#0047cc] hover:bg-[#003bb5] text-white px-5 py-2.5 text-xs font-bold shadow-md shadow-blue-900/10 transition-all"
+            >
+              <span>Enviar Pergunta Anônima</span>
+              <Share2 className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </div>
+
         {/* Cartaz e Detalhes da Paróquia */}
         <div className="max-w-xl mx-auto mt-10 rounded-3xl border border-slate-300/80 bg-white/80 p-5 shadow-sm text-center">
           <div className="flex items-center justify-center gap-2 mb-2 text-slate-700">

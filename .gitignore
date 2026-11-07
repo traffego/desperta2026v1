@@ -40,3 +40,5 @@ data/auth_info
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
