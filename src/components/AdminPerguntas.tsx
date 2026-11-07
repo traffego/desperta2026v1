@@ -16,7 +16,9 @@ import {
   Filter,
   X,
   Sparkles,
-  Download
+  Download,
+  Dices,
+  Shuffle
 } from 'lucide-react';
 import { PerguntaAnonima } from '@/types';
 import { AdminNavbar } from './AdminNavbar';
@@ -36,6 +38,13 @@ export function AdminPerguntas() {
   // Modais
   const [perguntaEditando, setPerguntaEditando] = useState<PerguntaAnonima | null>(null);
   const [perguntaExcluindo, setPerguntaExcluindo] = useState<PerguntaAnonima | null>(null);
+
+  // Sorteio
+  const [modalSorteio, setModalSorteio] = useState(false);
+  const [perguntaSorteada, setPerguntaSorteada] = useState<PerguntaAnonima | null>(null);
+  const [sorteandoAnimacao, setSorteandoAnimacao] = useState(false);
+  const [copiouSorteada, setCopiouSorteada] = useState(false);
+  const [statusMudandoNoSorteio, setStatusMudandoNoSorteio] = useState(false);
 
   // Form states de edição
   const [editTexto, setEditTexto] = useState('');
@@ -83,6 +92,68 @@ export function AdminPerguntas() {
   const totalGeral = perguntas.length;
   const totalSelecionadas = perguntas.filter((p) => p.status === 'selecionada').length;
   const totalRespondidas = perguntas.filter((p) => p.status === 'respondida').length;
+
+  // Perguntas elegíveis para sorteio: estritamente aquelas que NÃO foram marcadas como respondidas
+  const perguntasElegiveisSorteio = useMemo(() => {
+    return perguntas.filter((p) => p.status !== 'respondida');
+  }, [perguntas]);
+
+  // Sorteio Aleatório de Pergunta
+  const handleSortear = () => {
+    const disponiveis = perguntas.filter((p) => p.status !== 'respondida');
+    if (disponiveis.length === 0) {
+      alert('Não há perguntas disponíveis para sorteio. Todas as perguntas já foram respondidas ou nenhuma foi cadastrada!');
+      return;
+    }
+
+    setModalSorteio(true);
+    setSorteandoAnimacao(true);
+
+    // Efeito visual de giro no sorteio
+    let ticks = 0;
+    const interval = setInterval(() => {
+      const randomIdx = Math.floor(Math.random() * disponiveis.length);
+      setPerguntaSorteada(disponiveis[randomIdx]);
+      ticks++;
+      if (ticks >= 7) {
+        clearInterval(interval);
+        // Garante alternância se houver mais de uma
+        let pool = disponiveis;
+        if (disponiveis.length > 1 && perguntaSorteada) {
+          pool = disponiveis.filter((p) => p.id !== perguntaSorteada.id);
+        }
+        const finalIdx = Math.floor(Math.random() * pool.length);
+        setPerguntaSorteada(pool[finalIdx]);
+        setSorteandoAnimacao(false);
+      }
+    }, 70);
+  };
+
+  // Marcar como respondida direto da tela de sorteio (remove imediatamente de futuros sorteios)
+  const handleMarcarRespondidaNoSorteio = async () => {
+    if (!perguntaSorteada) return;
+    setStatusMudandoNoSorteio(true);
+    const novoStatus = perguntaSorteada.status === 'respondida' ? 'pendente' : 'respondida';
+    try {
+      await handleToggleStatus(perguntaSorteada, novoStatus);
+      setPerguntaSorteada((prev) => (prev ? { ...prev, status: novoStatus } : null));
+    } finally {
+      setStatusMudandoNoSorteio(false);
+    }
+  };
+
+  // Copiar pergunta sorteada
+  const handleCopiarPerguntaSorteada = async () => {
+    if (!perguntaSorteada) return;
+    const texto = `[${perguntaSorteada.sexo}, ${perguntaSorteada.idade} anos]: "${perguntaSorteada.pergunta}"`;
+    try {
+      await navigator.clipboard.writeText(texto);
+      setCopiouSorteada(true);
+      setTimeout(() => setCopiouSorteada(false), 2000);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   // Copiar todas as perguntas formatadas
   const handleCopiarTodas = async () => {
@@ -182,7 +253,7 @@ export function AdminPerguntas() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         {/* Metric Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs flex items-center gap-3.5">
             <div className="h-11 w-11 rounded-xl bg-blue-100 text-[#0047cc] flex items-center justify-center font-bold">
               <HelpCircle className="h-6 w-6" />
@@ -195,13 +266,25 @@ export function AdminPerguntas() {
             </div>
           </div>
 
+          <div className="rounded-2xl border border-purple-200 bg-white p-4 shadow-xs flex items-center gap-3.5">
+            <div className="h-11 w-11 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+              <Dices className="h-6 w-6" />
+            </div>
+            <div>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                Para Sorteio (Não Respondidas)
+              </span>
+              <span className="text-2xl font-black text-purple-700">{perguntasElegiveisSorteio.length}</span>
+            </div>
+          </div>
+
           <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs flex items-center gap-3.5">
             <div className="h-11 w-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
               <Star className="h-6 w-6" />
             </div>
             <div>
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
-                Selecionadas para o Evento
+                Selecionadas
               </span>
               <span className="text-2xl font-black text-amber-600">{totalSelecionadas}</span>
             </div>
@@ -220,10 +303,10 @@ export function AdminPerguntas() {
           </div>
         </div>
 
-        {/* Action Toolbar: Search, Filters, Copy All */}
+        {/* Action Toolbar: Search, Filters, Sorteio, Copy All */}
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 mb-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           {/* Search bar */}
-          <div className="relative flex-1 min-w-[240px]">
+          <div className="relative flex-1 min-w-[220px]">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
               <Search className="h-4 w-4" />
             </div>
@@ -273,12 +356,24 @@ export function AdminPerguntas() {
             </select>
           </div>
 
-          {/* Copiar Todas as Perguntas */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Botão de Sorteio e Ações */}
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            <button
+              onClick={handleSortear}
+              title="Sortear aleatoriamente uma pergunta não respondida"
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-purple-700 hover:bg-purple-800 active:scale-95 text-white px-3.5 py-2 text-xs font-bold transition-all cursor-pointer shadow-xs"
+            >
+              <Dices className="h-4 w-4" />
+              <span>Sortear</span>
+              <span className="bg-purple-900/70 text-purple-200 px-1.5 py-0.5 rounded-full text-[10px] font-mono">
+                {perguntasElegiveisSorteio.length}
+              </span>
+            </button>
+
             <button
               onClick={handleCopiarTodas}
               title="Copiar todas as perguntas visíveis formatadas para a psicóloga"
-              className={`flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer shadow-xs ${
+              className={`flex items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all cursor-pointer shadow-xs ${
                 copiedAll
                   ? 'bg-emerald-600 text-white'
                   : 'bg-slate-900 hover:bg-slate-800 text-white'
@@ -287,12 +382,12 @@ export function AdminPerguntas() {
               {copiedAll ? (
                 <>
                   <Check className="h-4 w-4" />
-                  <span>Copiado com Sucesso!</span>
+                  <span>Copiado!</span>
                 </>
               ) : (
                 <>
                   <Copy className="h-4 w-4" />
-                  <span>Copiar Todas ({perguntasFiltradas.length})</span>
+                  <span>Copiar ({perguntasFiltradas.length})</span>
                 </>
               )}
             </button>
@@ -572,6 +667,154 @@ export function AdminPerguntas() {
               >
                 Sim, Excluir
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DE SORTEIO DE PERGUNTA */}
+      {modalSorteio && perguntaSorteada && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-2xl rounded-3xl border border-purple-500/40 bg-slate-900 text-white p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+            {/* Efeito Glow no fundo */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+
+            {/* Header do Sorteio */}
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6 relative">
+              <div className="flex items-center gap-3">
+                <div className="h-11 w-11 rounded-2xl bg-purple-600/30 border border-purple-500/50 flex items-center justify-center text-purple-300">
+                  <Dices className={`h-6 w-6 ${sorteandoAnimacao ? 'animate-spin' : ''}`} />
+                </div>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+                    Pergunta Sorteada
+                    {sorteandoAnimacao && (
+                      <span className="text-xs font-medium text-purple-400 animate-pulse">
+                        Sorteando...
+                      </span>
+                    )}
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    {perguntasElegiveisSorteio.length} pergunta(s) elegível(is) restante(s)
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setModalSorteio(false)}
+                className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Badges de Identificação Anônima */}
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                {perguntaSorteada.sexo}
+              </span>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-200 border border-slate-700">
+                {perguntaSorteada.idade} anos
+              </span>
+              <span
+                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${
+                  perguntaSorteada.status === 'respondida'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                    : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                }`}
+              >
+                {perguntaSorteada.status === 'respondida'
+                  ? '✓ Já Respondida (Fora de Novos Sorteios)'
+                  : 'Pendente'}
+              </span>
+            </div>
+
+            {/* Conteúdo da Pergunta com Tipografia Destacada */}
+            <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-6 sm:p-7 mb-5 shadow-inner relative">
+              <span className="text-4xl text-purple-500/30 font-serif leading-none absolute top-3 left-3 select-none">
+                &ldquo;
+              </span>
+              <p
+                className={`text-base sm:text-xl font-medium leading-relaxed text-slate-100 whitespace-pre-wrap pl-4 ${
+                  sorteandoAnimacao ? 'opacity-30 blur-xs transition-opacity' : 'opacity-100'
+                }`}
+              >
+                {perguntaSorteada.pergunta}
+              </p>
+            </div>
+
+            {/* Banner Informativo quando Respondida */}
+            {perguntaSorteada.status === 'respondida' && (
+              <div className="mb-5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 p-3 text-xs text-emerald-300 flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" />
+                <span>
+                  <strong>Pergunta marcada como respondida!</strong> Ela foi automaticamente
+                  removida da lista de sorteio e não poderá mais ser sorteada.
+                </span>
+              </div>
+            )}
+
+            {/* Botões de Ação */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleCopiarPerguntaSorteada}
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2.5 text-xs font-bold transition-colors cursor-pointer"
+                >
+                  {copiouSorteada ? (
+                    <>
+                      <Check className="h-4 w-4 text-emerald-400" />
+                      <span>Copiado!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      <span>Copiar</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSortear}
+                  disabled={sorteandoAnimacao || (perguntasElegiveisSorteio.length === 0 || (perguntasElegiveisSorteio.length === 1 && perguntaSorteada.status !== 'respondida'))}
+                  title="Sortear outra pergunta pendente"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-purple-500/40 bg-purple-950/60 hover:bg-purple-900/60 text-purple-200 px-3.5 py-2.5 text-xs font-bold transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <RefreshCw className={`h-4 w-4 ${sorteandoAnimacao ? 'animate-spin' : ''}`} />
+                  <span>Sortear Outra</span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={statusMudandoNoSorteio}
+                  onClick={handleMarcarRespondidaNoSorteio}
+                  className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-xs font-black transition-all cursor-pointer shadow-lg disabled:opacity-60 ${
+                    perguntaSorteada.status === 'respondida'
+                      ? 'bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40'
+                      : 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                  }`}
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  <span>
+                    {perguntaSorteada.status === 'respondida'
+                      ? 'Reabrir (Tornar Elegível)'
+                      : 'Marcar como Respondida'}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setModalSorteio(false)}
+                  className="rounded-xl border border-slate-700 px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                >
+                  Fechar
+                </button>
+              </div>
             </div>
           </div>
         </div>
