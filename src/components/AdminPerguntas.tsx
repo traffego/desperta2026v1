@@ -89,7 +89,7 @@ export function AdminPerguntas() {
     if (perguntasFiltradas.length === 0) return;
 
     const textoFormatado = [
-      `=== PERGUNTAS DESPERTA 2026 (MOMENTO COM A PSICÓLOGA) ===`,
+      `=== PERGUNTAS DESPERTA 2026 (PSICÓLOGA & PADRE) ===`,
       `Total: ${perguntasFiltradas.length} pergunta(s)`,
       `Gerado em: ${new Date().toLocaleString('pt-BR')}`,
       `--------------------------------------------------------\n`,
