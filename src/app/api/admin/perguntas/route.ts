@@ -60,7 +60,7 @@ export async function PUT(req: NextRequest) {
     if (pergunta !== undefined) updatePayload.pergunta = pergunta.trim();
     if (status !== undefined) updatePayload.status = status;
     if (sexo !== undefined) updatePayload.sexo = sexo;
-    if (idade !== undefined) updatePayload.idade = Number(idade);
+    if (idade !== undefined) updatePayload.idade = idade.toString().trim();
 
     const { data, error } = await supabase
       .from('desperta_perguntas_anonimas')
@@ -110,4 +110,3 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'Erro no servidor' }, { status: 500 });
   }
 }
-

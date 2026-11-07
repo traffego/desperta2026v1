@@ -17,8 +17,8 @@ export type NovoParticipanteInput = {
 
 export interface PerguntaAnonima {
   id: string;
-  sexo: string;
-  idade: number;
+  sexo: string; // 'Feminino' | 'Masculino'
+  idade: string; // ex: '18', '65+'
   pergunta: string;
   status: string; // 'pendente' | 'selecionada' | 'respondida'
   created_at: string;
@@ -26,6 +26,6 @@ export interface PerguntaAnonima {
 
 export type NovaPerguntaInput = {
   sexo: string;
-  idade: number;
+  idade: string;
   pergunta: string;
 };

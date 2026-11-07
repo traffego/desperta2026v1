@@ -7,17 +7,16 @@ export async function POST(req: NextRequest) {
     const { sexo, idade, pergunta } = body;
 
     // Validações
-    if (!sexo || typeof sexo !== 'string' || !sexo.trim()) {
+    if (!sexo || !['Feminino', 'Masculino'].includes(sexo.trim())) {
       return NextResponse.json(
-        { error: 'Por favor, selecione o sexo.' },
+        { error: 'Por favor, selecione o sexo (Feminino ou Masculino).' },
         { status: 400 }
       );
     }
 
-    const parsedAge = Number(idade);
-    if (!idade || isNaN(parsedAge) || parsedAge < 5 || parsedAge > 120) {
+    if (!idade || typeof idade !== 'string' || !idade.trim()) {
       return NextResponse.json(
-        { error: 'Por favor, informe uma idade válida.' },
+        { error: 'Por favor, selecione a sua faixa de idade.' },
         { status: 400 }
       );
     }
@@ -34,7 +33,7 @@ export async function POST(req: NextRequest) {
       .insert([
         {
           sexo: sexo.trim(),
-          idade: parsedAge,
+          idade: idade.trim(),
           pergunta: pergunta.trim(),
           status: 'pendente',
         },
@@ -59,4 +58,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

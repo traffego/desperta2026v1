@@ -146,7 +146,7 @@ export function AdminPerguntas() {
           id: perguntaEditando.id,
           pergunta: editTexto.trim(),
           sexo: editSexo,
-          idade: parseInt(editIdade, 10),
+          idade: editIdade.toString().trim(),
           status: editStatus,
         }),
       });
@@ -255,7 +255,6 @@ export function AdminPerguntas() {
               <option value="todos">Todos os sexos</option>
               <option value="Feminino">Feminino</option>
               <option value="Masculino">Masculino</option>
-              <option value="Outro / Prefiro não dizer">Outro</option>
             </select>
           </div>
 
@@ -482,7 +481,6 @@ export function AdminPerguntas() {
                   >
                     <option value="Feminino">Feminino</option>
                     <option value="Masculino">Masculino</option>
-                    <option value="Outro / Prefiro não dizer">Outro</option>
                   </select>
                 </div>
 
