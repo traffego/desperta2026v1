@@ -14,7 +14,7 @@ import confetti from 'canvas-confetti';
 
 const OPCOES_SEXO = ['Feminino', 'Masculino'];
 
-// Gera idades de 12 a 64, terminando em '65+'
+// Idades de 12 a 64, finalizando em '65+'
 const OPCOES_IDADE = [
   ...Array.from({ length: 53 }, (_, i) => (i + 12).toString()),
   '65+',
@@ -69,13 +69,13 @@ export default function PerguntasDespertaPage() {
 
       try {
         confetti({
-          particleCount: 60,
+          particleCount: 50,
           spread: 60,
           origin: { y: 0.6 },
-          colors: ['#ffffff', '#a1a1aa', '#52525b'],
+          colors: ['#ffffff', '#a1a1aa', '#71717a'],
         });
       } catch (err) {
-        // Ignora em caso de browser restrito
+        // Ignora caso restrito
       }
     } catch (err: any) {
       setErrorMsg(err.message || 'Erro inesperado.');
@@ -91,137 +91,119 @@ export default function PerguntasDespertaPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black pb-16 pt-8">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6">
+    <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black pb-20 pt-10 relative">
+      {/* Luz sutil no topo para profundidade moderna */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-72 pointer-events-none opacity-40 blur-3xl -z-10"
+        style={{
+          background: 'radial-gradient(ellipse at top, rgba(255, 255, 255, 0.15), transparent 70%)',
+        }}
+      />
+
+      <div className="max-w-xl mx-auto px-4 sm:px-6">
         {/* Cabeçalho */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-zinc-900 border border-zinc-800 text-zinc-300 mb-4">
-              <Lock className="h-3 w-3 text-white" />
-              DESPERTA 2026 • ESPAÇO CONFIDENCIAL
-            </span>
-          </Link>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase bg-white/5 border border-white/10 text-zinc-300 mb-3">
+            <Lock className="h-3 w-3 text-zinc-400" />
+            <span>DESPERTA 2026 • ESPAÇO CONFIDENCIAL</span>
+          </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white leading-tight">
-            Caixa de Perguntas Anônimas
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+            Perguntas Anônimas
           </h1>
 
-          <p className="mt-2 text-sm sm:text-base font-normal text-zinc-400">
-            Dúvidas sobre Sexualidade, Afetividade e Vida Relacional.
+          <p className="mt-1.5 text-xs sm:text-sm text-zinc-400 font-normal">
+            Dúvidas sinceras sobre Sexualidade, Afetividade e Relacionamentos.
           </p>
         </div>
 
-        {/* Card Destaque: Anonimato + Psicóloga e Padre */}
-        <div className="mb-6 rounded-3xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl">
-          <div className="flex items-center gap-3 border-b border-zinc-800/80 pb-4 mb-4">
-            <div className="h-9 w-9 rounded-xl bg-zinc-900 border border-zinc-700 flex items-center justify-center text-white shrink-0">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-wider text-zinc-400 block">
-                Sigilo Absoluto
-              </span>
-              <h2 className="text-sm font-bold text-white">100% Anônimo, Seguro e Confidencial</h2>
-            </div>
+        {/* Card Destaque: A Psicóloga e o Padre */}
+        <div className="mb-6 rounded-2xl border border-white/10 bg-zinc-950/80 backdrop-blur-xl p-5 sm:p-6 shadow-2xl">
+          <div className="flex items-center gap-2.5 pb-3 border-b border-white/5 mb-3.5">
+            <ShieldCheck className="h-4 w-4 text-zinc-400" />
+            <span className="text-xs font-semibold tracking-wide text-zinc-200">
+              100% Anônimo, Seguro e Confidencial
+            </span>
           </div>
 
-          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed">
+          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
             Durante o encontro, teremos um momento dedicado onde{' '}
-            <strong className="text-white font-bold">uma Psicóloga e um Padre</strong> responderão
-            juntos e aleatoriamente às perguntas enviadas neste canal. Nenhum dado pessoal é coletado.
+            <strong className="text-zinc-200 font-semibold">uma Psicóloga e um Padre</strong>{' '}
+            responderão juntos e aleatoriamente às dúvidas enviadas. Nenhum dado pessoal é registrado.
           </p>
 
-          {/* Grid dos Dois Profissionais (Monocromático Moderno) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+          {/* Grid dos Dois Profissionais */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-4">
             {/* Psicóloga */}
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="h-6 w-6 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs font-black text-white">
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3.5">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="h-5 w-5 rounded-md bg-white/10 border border-white/10 flex items-center justify-center text-[10px] font-bold text-white">
                   Ψ
                 </span>
-                <h3 className="text-xs font-black uppercase text-white tracking-wider">
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-200">
                   A Psicóloga
-                </h3>
+                </h2>
               </div>
-              <p className="text-xs text-zinc-400 leading-snug">
+              <p className="text-[11px] text-zinc-400 leading-normal">
                 Acolhimento emocional, saúde mental, autoconhecimento e relacionamentos saudáveis.
               </p>
             </div>
 
             {/* Padre */}
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className="h-6 w-6 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs font-black text-white">
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3.5">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="h-5 w-5 rounded-md bg-white/10 border border-white/10 flex items-center justify-center text-[10px] font-bold text-white">
                   †
                 </span>
-                <h3 className="text-xs font-black uppercase text-white tracking-wider">
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-200">
                   O Padre
-                </h3>
+                </h2>
               </div>
-              <p className="text-xs text-zinc-400 leading-snug">
-                Orientação espiritual, fé, discernimento e a visão cristã do amor e da moral.
+              <p className="text-[11px] text-zinc-400 leading-normal">
+                Orientação espiritual, discernimento, fé e a visão cristã do amor e da moral.
               </p>
             </div>
-          </div>
-
-          {/* Garantias de Sigilo */}
-          <div className="mt-4 pt-3 border-t border-zinc-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-400">
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              Sem coleta de nome ou contato
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              Sem rastreamento de IP ou dispositivo
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              Sorteio aleatório no palco
-            </span>
           </div>
         </div>
 
         {/* TELA DE SUCESSO OU FORMULÁRIO */}
         {enviadoSucesso ? (
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6 sm:p-8 text-center shadow-2xl animate-in fade-in zoom-in-95 duration-300">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-zinc-900 border border-zinc-700 text-white mb-4 shadow-inner">
-              <CheckCircle2 className="h-9 w-9" />
+          <div className="rounded-2xl border border-white/10 bg-zinc-950/80 backdrop-blur-xl p-8 sm:p-10 text-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            {/* Ícone Minimalista Centralizado */}
+            <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-white/5 border border-white/20 flex items-center justify-center text-white shadow-inner">
+              <CheckCircle2 className="h-7 w-7" />
             </div>
 
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase bg-zinc-900 border border-zinc-700 text-zinc-300 mb-2">
-              Pergunta Registrada no Sigilo
-            </span>
+            {/* Badge Centralizado */}
+            <div className="mb-3">
+              <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-white/5 border border-white/10 text-zinc-300">
+                Pergunta Registrada no Sigilo
+              </span>
+            </div>
 
-            <h3 className="text-2xl font-black text-white tracking-tight mt-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
               Sua dúvida foi enviada com sucesso!
             </h3>
 
-            <p className="mt-2 text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
+            <p className="mt-2 text-xs sm:text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
               Obrigado pela sua confiança. A psicóloga e o padre farão a leitura e responderão às
               questões selecionadas durante o encontro.
             </p>
 
-            <div className="mt-6 pt-4 border-t border-zinc-800 flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="mt-8 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
                 onClick={handleNovaPergunta}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-zinc-200 text-black px-5 py-2.5 text-xs font-bold transition-all cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-zinc-200 text-black px-5 py-2.5 text-xs font-bold transition-all cursor-pointer"
               >
-                <RotateCcw className="h-4 w-4" />
-                Fazer outra pergunta
+                <RotateCcw className="h-3.5 w-3.5" />
+                <span>Fazer outra pergunta</span>
               </button>
-
-              <Link
-                href="/"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-850 px-5 py-2.5 text-xs font-bold text-zinc-300 transition-colors"
-              >
-                Voltar ao início
-              </Link>
             </div>
           </div>
         ) : (
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6 sm:p-8 shadow-2xl">
+          <div className="rounded-2xl border border-white/10 bg-zinc-950/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl">
             {errorMsg && (
-              <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-zinc-700 bg-zinc-900 p-3.5 text-xs font-semibold text-zinc-200">
+              <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-white/20 bg-zinc-900 p-3.5 text-xs text-zinc-200">
                 <AlertCircle className="h-4 w-4 shrink-0 text-white mt-0.5" />
                 <span>{errorMsg}</span>
               </div>
@@ -230,10 +212,10 @@ export default function PerguntasDespertaPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Sexo (Apenas Feminino e Masculino) */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">
+                <label className="block text-xs font-semibold tracking-wide text-zinc-300 mb-2">
                   Qual é o seu sexo? <span className="text-zinc-500">*</span>
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5">
                   {OPCOES_SEXO.map((item) => {
                     const isSelected = sexo === item;
                     return (
@@ -241,10 +223,10 @@ export default function PerguntasDespertaPage() {
                         key={item}
                         type="button"
                         onClick={() => setSexo(item)}
-                        className={`py-3 px-4 rounded-xl border text-xs sm:text-sm font-bold transition-all text-center cursor-pointer ${
+                        className={`py-2.5 px-4 rounded-xl border text-xs sm:text-sm font-semibold transition-all text-center cursor-pointer ${
                           isSelected
-                            ? 'border-white bg-white text-black shadow-md'
-                            : 'border-zinc-800 bg-zinc-900 text-zinc-400 hover:border-zinc-700 hover:text-white'
+                            ? 'border-white bg-white text-black font-bold shadow-md'
+                            : 'border-white/10 bg-white/[0.02] text-zinc-400 hover:border-white/20 hover:text-white'
                         }`}
                       >
                         {item}
@@ -258,7 +240,7 @@ export default function PerguntasDespertaPage() {
               <div>
                 <label
                   htmlFor="idade"
-                  className="block text-xs font-bold uppercase tracking-wider text-zinc-300 mb-1.5"
+                  className="block text-xs font-semibold tracking-wide text-zinc-300 mb-1.5"
                 >
                   Sua Idade <span className="text-zinc-500">*</span>
                 </label>
@@ -267,7 +249,7 @@ export default function PerguntasDespertaPage() {
                   required
                   value={idade}
                   onChange={(e) => setIdade(e.target.value)}
-                  className="w-full sm:w-60 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm text-white focus:border-white focus:outline-none transition-all font-medium cursor-pointer"
+                  className="w-full sm:w-56 rounded-xl border border-white/10 bg-zinc-900 px-3.5 py-2.5 text-xs sm:text-sm text-white focus:border-white/30 focus:outline-none transition-all cursor-pointer"
                 >
                   <option value="" disabled className="bg-zinc-900 text-zinc-500">
                     Selecione sua idade...
@@ -285,13 +267,11 @@ export default function PerguntasDespertaPage() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label
                     htmlFor="pergunta"
-                    className="block text-xs font-bold uppercase tracking-wider text-zinc-300"
+                    className="block text-xs font-semibold tracking-wide text-zinc-300"
                   >
                     Sua Pergunta ou Desabafo <span className="text-zinc-500">*</span>
                   </label>
-                  <span className="text-[11px] font-semibold text-zinc-500">
-                    {pergunta.length} / 1000 caracteres
-                  </span>
+                  <span className="text-[11px] text-zinc-500">{pergunta.length} / 1000</span>
                 </div>
                 <textarea
                   id="pergunta"
@@ -300,8 +280,8 @@ export default function PerguntasDespertaPage() {
                   maxLength={1000}
                   value={pergunta}
                   onChange={(e) => setPergunta(e.target.value)}
-                  placeholder="Escreva com total liberdade. Dúvidas sobre sexualidade, relacionamentos, culpa, namoro, castidade, sentimentos, corpo ou vivência cristã..."
-                  className="w-full rounded-2xl border border-zinc-800 bg-zinc-900 p-4 text-sm text-white placeholder-zinc-500 focus:border-white focus:outline-none transition-all font-medium resize-y"
+                  placeholder="Escreva livremente sua dúvida sobre relacionamentos, sentimentos, corpo, culpa, namoro, castidade ou vivência da fé..."
+                  className="w-full rounded-xl border border-white/10 bg-zinc-900/80 p-3.5 text-xs sm:text-sm text-white placeholder-zinc-500 focus:border-white/30 focus:outline-none transition-all resize-y"
                 />
               </div>
 
@@ -309,11 +289,11 @@ export default function PerguntasDespertaPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-zinc-200 active:scale-[0.99] px-6 py-3.5 text-base font-black text-black shadow-xl transition-all disabled:opacity-50 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-zinc-200 active:scale-[0.99] px-5 py-3 text-xs sm:text-sm font-bold text-black shadow-lg transition-all disabled:opacity-50 cursor-pointer"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-5 w-5 text-black" viewBox="0 0 24 24">
+                    <svg className="animate-spin h-4 w-4 text-black" viewBox="0 0 24 24">
                       <circle
                         className="opacity-25"
                         cx="12"
@@ -333,20 +313,13 @@ export default function PerguntasDespertaPage() {
                   </span>
                 ) : (
                   <>
-                    <Lock className="h-4 w-4" />
+                    <Lock className="h-3.5 w-3.5" />
                     <span>ENVIAR PERGUNTA 100% ANÔNIMA</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </>
                 )}
               </button>
             </form>
-
-            <div className="mt-6 pt-4 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
-              <Link href="/" className="hover:text-zinc-300 transition-colors">
-                ← Voltar para inscrição no evento
-              </Link>
-              <span>Paróquia São Francisco de Assis</span>
-            </div>
           </div>
         )}
       </div>

@@ -1,9 +1,8 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { EventHeader } from '@/components/EventHeader';
 import { RegistrationForm } from '@/components/RegistrationForm';
-import { ShieldCheck, MapPin, Heart, Share2 } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { EVENT_INFO } from '@/lib/utils';
 
 export default function HomePage() {
@@ -16,31 +15,6 @@ export default function HomePage() {
         {/* Seção Central de Inscrição */}
         <div className="mt-6">
           <RegistrationForm />
-        </div>
-
-        {/* Card de Destaque para Perguntas Anônimas com a Psicóloga e o Padre */}
-        <div className="max-w-xl mx-auto mt-8 rounded-3xl border-2 border-dashed border-[#0047cc]/40 bg-gradient-to-r from-blue-50/80 via-white to-amber-50/60 p-5 shadow-sm text-center">
-          <div className="flex items-center justify-center gap-2 mb-1.5">
-            <span className="badge-tag bg-[#0047cc] text-white text-[10px]">NOVO</span>
-            <span className="text-xs font-black uppercase tracking-wider text-slate-800">
-              Momento: Psicóloga & Padre
-            </span>
-          </div>
-          <h3 className="text-base font-extrabold text-slate-900">
-            Dúvidas sobre Sexualidade e Afetividade?
-          </h3>
-          <p className="text-xs text-slate-600 mt-1 max-w-md mx-auto">
-            Envie sua pergunta de forma <strong>100% anônima e segura</strong>. A psicóloga e o padre responderão juntos aleatoriamente durante o evento!
-          </p>
-          <div className="mt-3.5">
-            <Link
-              href="/perguntas-desperta"
-              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 text-xs font-bold shadow-md shadow-slate-900/10 transition-all"
-            >
-              <span>🔒 Caixa de Perguntas Anônimas</span>
-              <Share2 className="h-3.5 w-3.5" />
-            </Link>
-          </div>
         </div>
 
         {/* Cartaz e Detalhes da Paróquia */}
